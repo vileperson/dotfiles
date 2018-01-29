@@ -29,7 +29,7 @@ for file in $files; do
     echo "Creating symlink to $file in home directory."
     ln -s $dir/$file ~/$file
 
-# create directories for i3, i3status, pianobar and ranger
+
 cd ~/git/dotfiles/.config
 for d in */ ; do
 	
@@ -44,12 +44,16 @@ done
                                                                                                                                                           
 #!/bin/bash
 
-dir=~/Git/dotfiles/.config
+# variables
+
+dir=~/Git/dotfiles
+dirbak=~/Git/dotfilesbak
+# Functions
 
 fun1 ()
 { 
-        if [ -d ~/test_old/.config/"$d" ]; then
-        mkdir -p ~/test_old/.config/"$d"/
+        if [ -d "$dirbak"/"$d" ]; then
+        mkdir -p "$dirbak"/"$d"/
         fi
 }
 
@@ -57,26 +61,45 @@ fun2 ()
 { 
         cd "$dir"/"$d"/
                 for f in * ; do
-                        if [ -f ~/test/.config/"$d"/"$f" ]; then
-                        mv ~/test/.config/"$d"/"$f" ~/test_old/.config/"$d"/"$f"
+                        if [ -f ~/"$subdir"/"$d"/"$f" ]; then
+                        mv ~/"$subdir"/"$d"/"$f" "$dirbak"/"$subdir"/"$d"/"$f"
                         fi
                 ln -s "$dir"/"$d"/"$f" ~/test/.config/"$d"/
         done
 }
 
-if [ -d ~/test_old/.config ]; then
-mkdir -p ~/test_old/.config
+fun3 ()
+{
+	for d in "$subdir"/*/ ; do
+        	if [ ! -d ~/"$subdir"/"$d" ]; then
+                	mkdir -p ~/"$subdir"/"$d" &&
+			ln -s "$dir"/"$subdir"/"$d"/* ~/"$subdir"/"$d"/
+        	else
+			fun1
+			fun2
+		fi
+	done
+{
+
+# Start
+
+# Creates directory for backing up current config files, if it does not already exist.
+
+
+
+if [ ! -d "$dirbak" ]; then
+mkdir -p "$dirbak"
 fi
 
-cd "$dir"
-for d in */ ; do
-        if [ ! -d ~/test/.config/"$d" ]; then
-                mkdir -p ~/test/.config/"$d" &&
-                ln -s "$dir"/"$d"/* ~/test/.config/"$d"/
-        else
 
-                fun1
-                fun2
-        fi
-done
+# Creates appropriate directories for config files that are not directly in the user's /home, if they do not exist already. If they DO exist, run function 1 and function 2.
+
+cd "$dir"
+
+for subdir in */ ; do
+	if [ ! -d ~/"$subdir" ] then
+		mkdir -p ~/"$subdir" &&
+		fun3
+	else fun3
+	fi
                                                               	

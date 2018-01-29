@@ -19,3 +19,4 @@ runtime! archlinux.vim
 :colorscheme blugrine
 :set number
 :set  relativenumber
+hi NonText ctermbg=NONE

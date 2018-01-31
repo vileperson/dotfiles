@@ -16,7 +16,7 @@ runtime! archlinux.vim
 
 :filetype plugin on
 :syntax on
-:colorscheme blugrine
+":colorscheme blugrine
 :set number
 :set  relativenumber
 hi NonText ctermbg=NONE
